@@ -20,4 +20,4 @@ EXPOSE 10000
 
 # The command to run your application when the container starts
 # This uses the PORT variable provided by Render's environment
-CMD ["gunicorn", "--bind", "0.0.0.0:${PORT}", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5002", "app:app"]
