@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 5005
 
 # The command to run your application when the container starts
-CMD ["gunicorn", "--bind", "0.0.0.0:5005", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:", "app:app"]
