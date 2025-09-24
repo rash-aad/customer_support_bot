@@ -1,2 +1,27 @@
-__pycache__
-env
+# Ignore the virtual environment
+venv
+.venv
+
+# Ignore Git directory
+.git
+.gitignore
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore IDE/editor-specific files
+.idea/
+.vscode/
+
+# Ignore any local environment files
+.env
+
+# Ignore large data or model files (add your own here)
+# For example:
+# models/
+# data/
+# *.csv
+# *.pkl
