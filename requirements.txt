@@ -1,0 +1,7 @@
+# requirements.txt
+transformers
+torch
+sentence-transformers
+numpy
+flask
+gunicorn

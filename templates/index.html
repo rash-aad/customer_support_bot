@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Bot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Support Bot Agent</h2>
+        </div>
+        <div class="chat-box" id="chat-box">
+            <div class="message bot-message">
+                <p>Hello! How can I assist you today?</p>
+            </div>
+        </div>
+        <form class="chat-input-form" id="chat-form">
+            <input type="text" id="user-input" placeholder="Type your message here..." autocomplete="off">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script>
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+        const chatBox = document.getElementById('chat-box');
+
+        chatForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const userMessage = userInput.value.trim();
+            if (userMessage === '') return;
+
+            appendMessage(userMessage, 'user-message');
+            userInput.value = '';
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: userMessage })
+                });
+                const data = await response.json();
+                appendMessage(data.response, 'bot-message', true); // Pass true to check for detail button
+            } catch (error) {
+                console.error('Error:', error);
+                appendMessage('Sorry, something went wrong.', 'bot-message');
+            }
+        });
+
+        function appendMessage(message, className, addDetailButton = false) {
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add('message', className);
+            
+            const p = document.createElement('p');
+            p.textContent = message;
+            messageContainer.appendChild(p);
+
+            // If it's a short bot message, add the "Tell me more" button
+            if (addDetailButton && className === 'bot-message' && !message.includes("I don't have enough information")) {
+                const detailButton = document.createElement('button');
+                detailButton.textContent = 'Tell me more';
+                detailButton.className = 'detail-button';
+                detailButton.onclick = async () => {
+                    detailButton.remove(); // Remove button after click
+                    try {
+                        const response = await fetch('/more_detail');
+                        const data = await response.json();
+                        appendMessage(`Let me provide more context: "${data.response}"`, 'bot-message');
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                };
+                messageContainer.appendChild(detailButton);
+            }
+            
+            chatBox.appendChild(messageContainer);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
