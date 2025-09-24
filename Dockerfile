@@ -13,8 +13,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of your application's code from your host to your container at /app
 COPY . .
 
-# Tell Docker that the container listens on port 5002
-EXPOSE 5005
 
 # The command to run your application when the container starts
-CMD ["gunicorn", "--bind", "0.0.0.0:5005", "app:app"]
+# Expose the port Render will provide
+EXPOSE 10000
+
+# The command to run your application when the container starts
+# This uses the PORT variable provided by Render's environment
+CMD ["gunicorn", "--bind", "0.0.0.0:${PORT}", "app:app"]
